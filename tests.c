@@ -1,8 +1,11 @@
 #include "finders.h"
 #include "util.h"
 
-#include <sys/time.h>
+#if defined(_WIN32)
+#include <windows.h>
+#else
 #include <time.h>
+#endif
 #include <float.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -22,9 +25,17 @@ static uint32_t hash32(uint32_t x)
 
 static double now()
 {
+#if defined(_WIN32)
+    LARGE_INTEGER freq;
+    LARGE_INTEGER counter;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&counter);
+    return (double)counter.QuadPart / (double)freq.QuadPart;
+#else
     struct timespec t;
     clock_gettime(CLOCK_MONOTONIC, &t);
     return t.tv_sec + t.tv_nsec * 1e-9;
+#endif
 }
 
 /* Runs a performance test using function f(). The function should take a
@@ -538,7 +549,5 @@ int main()
 
     return 0;
 }
-
-
 
 

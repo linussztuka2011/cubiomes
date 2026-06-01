@@ -43,10 +43,8 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           if %errorlevel% neq 0 exit /b %errorlevel%
-          set SOURCES_C=noise.c biomes.c layers.c biomenoise.c generator.c finders.c util.c quadbase.c
-          
-          REM Kompiliere die Objektdateien
-          cl /c /O2 %SOURCES_C%
+          REM Kompiliere nur die Bibliotheksquellen (ohne tests.c)
+          cl /c /O2 noise.c biomes.c layers.c biomenoise.c generator.c finders.c util.c quadbase.c
           if %errorlevel% neq 0 exit /b %errorlevel%
           
           REM Erstelle die statische Bibliothek (.lib)
