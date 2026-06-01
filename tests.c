@@ -26,10 +26,9 @@ static uint32_t hash32(uint32_t x)
 static double now()
 {
 #if defined(_WIN32)
-    static LARGE_INTEGER freq = {0};
+    LARGE_INTEGER freq;
     LARGE_INTEGER counter;
-    if (freq.QuadPart == 0)
-        QueryPerformanceFrequency(&freq);
+    QueryPerformanceFrequency(&freq);
     QueryPerformanceCounter(&counter);
     return (double)counter.QuadPart / (double)freq.QuadPart;
 #else
@@ -550,6 +549,5 @@ int main()
 
     return 0;
 }
-
 
 
