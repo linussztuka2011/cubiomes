@@ -43,7 +43,7 @@ jobs:
           if %errorlevel% neq 0 exit /b %errorlevel%
           
           # Kompiliere die Objektdateien
-          cl /c /O2 *.c
+          cl /c /O2 biomenoise.c biomes.c finders.c generator.c layers.c noise.c quadbase.c util.c
           if %errorlevel% neq 0 exit /b %errorlevel%
           
           # Erstelle die statische Bibliothek (.lib)
