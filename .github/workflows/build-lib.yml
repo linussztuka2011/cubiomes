@@ -27,8 +27,9 @@ jobs:
           # Kompiliere statische Bibliothek (.a)
           set -e
           SOURCES="noise.c biomes.c layers.c biomenoise.c generator.c finders.c util.c quadbase.c"
+          OBJECTS="${SOURCES//.c/.o}"
           gcc -c -O3 -fPIC $SOURCES
-          ar rcs libcubiomes.a noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o
+          ar rcs libcubiomes.a $OBJECTS
           
           # Kompiliere dynamische Bibliothek (.so)
           gcc -shared -o libcubiomes.so -fPIC *.o -lm
@@ -43,17 +44,19 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           if %errorlevel% neq 0 exit /b %errorlevel%
+          set SOURCES_C=noise.c biomes.c layers.c biomenoise.c generator.c finders.c util.c quadbase.c
+          set SOURCES_OBJ=%SOURCES_C:.c=.obj%
           
           REM Kompiliere die Objektdateien
-          cl /c /O2 noise.c biomes.c layers.c biomenoise.c generator.c finders.c util.c quadbase.c
+          cl /c /O2 %SOURCES_C%
           if %errorlevel% neq 0 exit /b %errorlevel%
           
           REM Erstelle die statische Bibliothek (.lib)
-          lib /OUT:libcubiomes.lib noise.obj biomes.obj layers.obj biomenoise.obj generator.obj finders.obj util.obj quadbase.obj
+          lib /OUT:libcubiomes.lib %SOURCES_OBJ%
           if %errorlevel% neq 0 exit /b %errorlevel%
           
           REM Erstelle die dynamische Bibliothek (.dll)
-          link /DLL /OUT:libcubiomes.dll noise.obj biomes.obj layers.obj biomenoise.obj generator.obj finders.obj util.obj quadbase.obj
+          link /DLL /OUT:libcubiomes.dll %SOURCES_OBJ%
           if %errorlevel% neq 0 exit /b %errorlevel%
           
           REM Zippe die Dateien zusammen mit den Header-Dateien (.h)
