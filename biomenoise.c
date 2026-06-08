@@ -1480,7 +1480,21 @@ int climateToBiome(int mc, const uint64_t np[6], uint64_t *dat)
         idx = get_resulting_node(np, bt, 0, 0, -1, 0);
     }
 
-    return (bt->nodes[idx] >> 48) & 0xFF;
+    int biome = (bt->nodes[idx] >> 48) & 0xFF;
+    if (mc >= MC_26_2_S8)
+    {
+        int64_t depth = (int64_t)np[4];
+        if (depth >= 1000 && depth <= 9500)
+        {
+            int64_t temp = (int64_t)np[0];
+            int64_t weird = (int64_t)np[5];
+            if (temp >= 1000 && weird >= 1000)
+            {
+                return sulfur_caves;
+            }
+        }
+    }
+    return biome;
 }
 
 
